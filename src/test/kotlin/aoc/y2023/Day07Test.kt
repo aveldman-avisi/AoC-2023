@@ -104,22 +104,12 @@ class Day07Test {
 
 
     @Test
-    fun solution1() {
+    fun solution() {
         val input = Utils().readInputsFromResources("y2023", "day07", "txt")
         val hands = parseInput(input!!)
         val sortedHands = hands.sorted()
         val solution = sortedHands.mapIndexed { index, hand -> hand.bid * (index + 1) }.sumOf { it }
         println("Solution: $solution")
-    }
-
-    @Test
-    fun solution2() {
-        val input = Utils().readInputsFromResources("y2023", "day07", "txt")
-        val hands = parseInput(input!!)
-        val sortedHands = hands.sorted()
-        val solution = sortedHands.mapIndexed { index, hand -> hand.bid * (index + 1) }.sumOf { it }
-        println("Solution: $solution")
-
     }
 
 }
