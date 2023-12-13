@@ -11,3 +11,13 @@ fun <T> List<T>.getIndicesOf(element: T) =
             index
         } else null
     }
+
+fun <T> List<List<T>>.transpose(): List<List<T>> {
+    val cols = this.first().size
+    val rows = this.size
+    return List(cols) { j ->
+        List(rows) { i ->
+            this[i][j]
+        }
+    }
+}
