@@ -37,44 +37,35 @@ class Day17Test {
 
         queue.add(State(0, start, -1))
 
-        var lowestHeatLoss = Int.MAX_VALUE
-
         while (queue.isNotEmpty()) {
             val (currentHeatLoss, currentPosition, currentDirection) = queue.poll()
-            // meerdere opties zoeken zou niet nodig moeten zijn vanwege priorityqueue, maar ik snap het niet meer
-            // in principe kun je hier ook direct currentHeatLoss returnen
-            if (currentPosition == end && currentHeatLoss < lowestHeatLoss) {
-                lowestHeatLoss = currentHeatLoss
+            if (currentPosition == end) {
+                return currentHeatLoss
             }
+            // Niet terug of vooruit
+            val allowedDirections = (0..<4).filter { it != currentDirection && (it + 2) % 4 != currentDirection }
 
-            if (currentPosition != end && currentHeatLoss < lowestHeatLoss) {
-                // Niet terug of vooruit
-                val allowedDirections = (0..<4).filter { it != currentDirection && (it + 2) % 4 != currentDirection }
-
-                for (direction in allowedDirections) {
-                    var nextHeatLoss = currentHeatLoss
-                    // Bereken voor de maximale lengte van rechte pad
-                    for (step in 1..maxLength) {
-                        val nextPosition = Position(
-                            currentPosition.x + directions[direction].x * step,
-                            currentPosition.y + directions[direction].y * step
-                        )
-                        if (nextPosition.x in 0..<height && nextPosition.y in 0..<width) {
-                            nextHeatLoss += data[nextPosition.x][nextPosition.y]
-                            if (nextHeatLoss < visited.getOrDefault(Pair(nextPosition, direction), Int.MAX_VALUE)) {
+            for (direction in allowedDirections) {
+                var nextHeatLoss = currentHeatLoss
+                // Bereken voor de maximale lengte van rechte pad
+                for (step in 1..maxLength) {
+                    val nextPosition = Position(
+                        currentPosition.x + directions[direction].x * step,
+                        currentPosition.y + directions[direction].y * step
+                    )
+                    if (nextPosition.x in 0..<height && nextPosition.y in 0..<width) {
+                        nextHeatLoss += data[nextPosition.x][nextPosition.y]
+                        if (nextHeatLoss < visited.getOrDefault(Pair(nextPosition, direction), Int.MAX_VALUE)) {
+                            // Alleen als de huidige step meer is dan de minimale lengte van een rechte lijn
+                            if (step >= minLength) {
                                 visited[Pair(nextPosition, direction)] = nextHeatLoss
-                                // Alleen als de huidige step meer is dan de minimale lengte van een rechte lijn
-                                if (step >= minLength) {
-                                    queue.add(State(nextHeatLoss, nextPosition, direction))
-                                }
+                                queue.add(State(nextHeatLoss, nextPosition, direction))
                             }
                         }
                     }
                 }
             }
         }
-
-        // 906 blijkbaar niet goed
-        return lowestHeatLoss
+        return Int.MAX_VALUE
     }
 }
