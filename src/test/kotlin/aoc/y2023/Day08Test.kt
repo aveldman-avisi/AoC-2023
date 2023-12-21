@@ -1,6 +1,7 @@
 package aoc.y2023
 
 import aoc.utils.Utils
+import aoc.utils.lcm
 import org.junit.jupiter.api.Test
 
 class Day08Test {
@@ -86,29 +87,8 @@ class Day08Test {
 
         println("Steps per path: $stepsPerPath")
 
-        val solution = findLCMOfListOfNumbers(stepsPerPath.map { it.toLong() })
+        val solution = stepsPerPath.map { it.toLong() }.lcm()
         println("Solution: $solution")
 
-    }
-
-    private fun findLCM(a: Long, b: Long): Long {
-        val larger = if (a > b) a else b
-        val maxLcm: Long = a * b
-        var lcm = larger
-        while (lcm <= maxLcm) {
-            if (lcm % a == 0L && lcm % b == 0L) {
-                return lcm
-            }
-            lcm += larger
-        }
-        return maxLcm
-    }
-
-    private fun findLCMOfListOfNumbers(numbers: List<Long>): Long {
-        var result = numbers[0]
-        for (i in 1..<numbers.size) {
-            result = findLCM(result, numbers[i])
-        }
-        return result
     }
 }
